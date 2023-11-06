@@ -1,4 +1,4 @@
-# tetris_aws
+# tetris_aws_go
 
 ## Goals
 
@@ -6,7 +6,7 @@ The goal of this project was to create a full stack AWS native project template.
 types in sync between the frontend and backend using code generation. Here is the achieved stack:
 
 * Backend:
-    * [Kotlin](https://kotlinlang.org/)
+    * [Go](https://go.dev/)
     * [Lambda](https://aws.amazon.com/lambda/)
     * [ApiGateway](https://aws.amazon.com/api-gateway/)
 * Frontend:
@@ -17,12 +17,12 @@ types in sync between the frontend and backend using code generation. Here is th
     * Deployments: [CDK](https://aws.amazon.com/cdk/)
     * Authentication: [Cognito](https://aws.amazon.com/cognito/)  
     * Api Definition: [Smithy](https://smithy.io/2.0/index.html)
-    * Kotlin Type Generation: [smithy-kotlin](https://github.com/awslabs/smithy-kotlin)
+    * Go Type Generation: [smithy-go](https://github.com/aws/smithy-go)
     * Typescript Type Generation: [smithy-typescript](https://github.com/awslabs/smithy-typescript)
 
 ## Warnings
 
-The kotlin and typescript type generation rely on [smithy-kotlin](https://github.com/awslabs/smithy-kotlin)
+The go and typescript type generation rely on [smithy-go](https://github.com/awslabs/smithy-go)
 and [smithy-typescript](https://github.com/awslabs/smithy-typescript), both products are not yet GA. As such they still
 have some quirks to work through. Overall it seems that the typescript code generation tool is a bit more stable.
 
@@ -30,7 +30,7 @@ If you stumbled across this guide another resource that wasn't GA but looks prom
 is: [aws-prototyping-sdk](https://github.com/aws/aws-prototyping-sdk), specifically
 the [type-safe-api](https://github.com/aws/aws-prototyping-sdk/blob/mainline/packages/type-safe-api/README.md).
 
-^last updated 08/06/2023
+^last updated 11/05/2023
 
 ## Getting started
 
