@@ -1,0 +1,28 @@
+{
+  "version": "1.0",
+  "plugins": {
+    "openapi": {
+      "service": "com.tetris#Tetris",
+      "jsonContentType": "application/x-amz-json-1.1",
+      "defaultBlobFormat": "binary",
+      "disableCloudFormationSubstitution": true,
+      "apiGatewayType": "REST"
+    },
+    "typescript-codegen": {
+      "service": "com.tetris#Tetris",
+      "targetNamespace": "Tetris",
+      "package": "ts-client",
+      "packageVersion": "0.0.1",
+      "packageJson": {
+        "license": "Apache-2.0"
+      }
+    },
+    "kotlin-codegen": {
+      "service": "com.tetris#Tetris",
+      "package": {
+        "version": "1.0.0",
+        "name": "com.tetris"
+      }
+    }
+  }
+}
