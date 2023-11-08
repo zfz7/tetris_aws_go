@@ -1,42 +1,20 @@
-plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.9.0"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("java")
-    application
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation("com.amazonaws:aws-lambda-java-events:3.11.2")
-    implementation("com.amazonaws:aws-lambda-java-core:1.2.2")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation(project(":ktclient"))
-
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
-    testImplementation("io.mockk:mockk:1.13.5")
-    testImplementation("uk.org.webcompere:system-stubs-jupiter:2.0.2")
-
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+task("build") {
+    doLast {
+        //GOOS=linux GOARCH=arm64 go build -o bootstrap main.go
+        exec {
+            executable = "go"
+            environment = environment
+                .plus(Pair("GOOS", "linux"))
+                .plus(Pair("GOARCH", "arm64"))
+            args = listOf("build", "-o", "bootstrap", "main.go")
+        }
+        exec {
+            executable = "zip"
+            args = listOf("lambdaFunction.zip", "bootstrap")
+        }
     }
 }
-
-application {
-    mainClass.set("none")//Need to generate jar
-}
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
-}
-
-tasks.named("build") {
-    dependsOn(":model:build")
+task<Delete>("clean") {
+    delete("bootstrap")
+    delete("lambdaFunction.zip")
 }

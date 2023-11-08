@@ -1,7 +1,7 @@
 import { Construct } from 'constructs';
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { ApiDefinition, EndpointType, SecurityPolicy, SpecRestApi } from 'aws-cdk-lib/aws-apigateway';
-import { Code, Function, IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { Architecture, Code, Function, IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Effect, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { RegionInfo } from 'aws-cdk-lib/region-info';
 import * as fs from 'fs';
@@ -22,9 +22,10 @@ export class ServiceStack extends Stack {
   constructor(scope: Construct, id: string, props: ServiceStackProps) {
     super(scope, id, props);
     const lambda = new Function(this, `${PROJECT}-Api-Lambda`, {
-      code: Code.fromAsset('../backend/build/libs/backend-all.jar', { deployTime: true }),
-      handler: 'com.backend.LambdaMain',
-      runtime: Runtime.JAVA_17,
+      code: Code.fromAsset('../backend/lambdaFunction.zip', { deployTime: true }),
+      handler: 'bootstrap',
+      runtime: Runtime.PROVIDED_AL2,
+      architecture: Architecture.ARM_64,
       environment: {
         ...props.cognitoEnv,
       },
