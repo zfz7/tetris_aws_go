@@ -18,3 +18,10 @@ task<Delete>("clean") {
     delete("bootstrap")
     delete("lambdaFunction.zip")
 }
+
+task("test") {
+    exec {
+        executable = "go"
+        args = listOf("test")
+    }
+}
