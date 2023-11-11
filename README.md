@@ -22,6 +22,8 @@ types in sync between the frontend and backend using code generation. Here is th
 
 ## Warnings
 
+[smithy-go](https://github.com/awslabs/smithy-go) Does not yet work. Track this [issue](https://github.com/aws/smithy-go/issues/458) to see updated status 
+
 The go and typescript type generation rely on [smithy-go](https://github.com/awslabs/smithy-go)
 and [smithy-typescript](https://github.com/awslabs/smithy-typescript), both products are not yet GA. As such they still
 have some quirks to work through. Overall it seems that the typescript code generation tool is a bit more stable.
