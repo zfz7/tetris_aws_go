@@ -1,7 +1,6 @@
 extra["smithyVersion"] = "1.40.0"
 extra["yarnVersion"] = "1.22.19"
 extra["nodeVersion"] = "20.9.0"
-extra["smithyKotlinVersion"] = "0.28.1"
 extra["smithyTypeScriptVersion"] = "0.18.0"
 
 plugins {
@@ -25,7 +24,6 @@ tasks.register("build") {
     dependsOn("model:build")
     dependsOn("cdk:build")
     dependsOn("tsclient:build")
-    dependsOn("ktclient:build")
     dependsOn("backend:build")
     dependsOn("frontend:build")
 }
@@ -33,8 +31,6 @@ tasks.register("clean") {
     dependsOn("model:clean")
     dependsOn("cdk:clean")
     dependsOn("tsclient:clean")
-    dependsOn("ktclient:clean")
-    dependsOn("ktclient:cleanSrc")
     dependsOn("backend:clean")
     dependsOn("frontend:clean")
 }
