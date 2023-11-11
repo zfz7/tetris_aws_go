@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/pkg/model"
 	"context"
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
@@ -19,7 +20,7 @@ var corsHeaders = map[string]string{
 	"Access-Control-Allow-Methods":     "OPTIONS, POST, GET",
 	"Access-Control-Allow-Credentials": "true",
 }
-var apiError, _ = json.Marshal(ApiError{
+var apiError, _ = json.Marshal(model.ApiError{
 	ErrorMessage: "Not Found",
 })
 var errorEvent = events.APIGatewayProxyResponse{
@@ -48,28 +49,15 @@ func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIG
 		Body:       string(body),
 	}, nil
 }
-func sayHello(input string) SayHelloResponse {
-	return SayHelloResponse{Message: input}
+func sayHello(input string) model.SayHelloResponse {
+	return model.SayHelloResponse{Message: input}
 }
 
-func handelInfo() InfoResponse {
-	return InfoResponse{
+func handelInfo() model.InfoResponse {
+	return model.InfoResponse{
 		Region:                 os.Getenv("REGION"),
 		UserPoolId:             os.Getenv("USER_POOL_ID"),
 		UserPoolWebClientId:    os.Getenv("USER_POOL_WEB_CLIENT_ID"),
 		AuthenticationFlowType: "USER_PASSWORD_AUTH",
 	}
-}
-
-type SayHelloResponse struct {
-	Message string `json:"message"`
-}
-type InfoResponse struct {
-	AuthenticationFlowType string `json:"authenticationFlowType"`
-	Region                 string `json:"region"`
-	UserPoolId             string `json:"userPoolId"`
-	UserPoolWebClientId    string `json:"userPoolWebClientId"`
-}
-type ApiError struct {
-	ErrorMessage string `json:"errorMessage"`
 }

@@ -6,7 +6,7 @@ task("build") {
             environment = environment
                 .plus(Pair("GOOS", "linux"))
                 .plus(Pair("GOARCH", "arm64"))
-            args = listOf("build", "-o", "bootstrap", "main.go")
+            args = listOf("build", "-o", "bootstrap", "./pkg/main.go")
         }
         exec {
             executable = "zip"
@@ -22,6 +22,6 @@ task<Delete>("clean") {
 task("test") {
     exec {
         executable = "go"
-        args = listOf("test")
+        args = listOf("test", "-v", "./...")
     }
 }
