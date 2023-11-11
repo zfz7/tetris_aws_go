@@ -19,9 +19,13 @@ var corsHeaders = map[string]string{
 	"Access-Control-Allow-Methods":     "OPTIONS, POST, GET",
 	"Access-Control-Allow-Credentials": "true",
 }
+var apiError, _ = json.Marshal(ApiError{
+	ErrorMessage: "Not Found",
+})
 var errorEvent = events.APIGatewayProxyResponse{
 	Headers:    corsHeaders,
 	StatusCode: http.StatusNotFound,
+	Body:       string(apiError),
 }
 
 func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
