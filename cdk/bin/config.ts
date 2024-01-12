@@ -2,8 +2,8 @@ import {Stage} from "./types";
 
 export const PROJECT = 'Tetris-Go'
 export const AWS_ACCOUNT = process.env.AWS_ACCOUNT!
-export const ROOT_HOSTED_ZONE_ID =  process.env.ROOT_HOSTED_ZONE_ID!
-export const ROOT_HOSTED_ZONE_NAME =  process.env.ROOT_HOSTED_ZONE_NAME!
+export const ROOT_HOSTED_ZONE_ID =  process.env.ROOT_HOSTED_ZONE_ID_GO!
+export const ROOT_HOSTED_ZONE_NAME =  process.env.ROOT_HOSTED_ZONE_NAME_GO!
 export const beta: Stage = {
     isProd: false,
     name: 'Beta',

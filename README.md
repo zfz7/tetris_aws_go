@@ -55,8 +55,8 @@ This project assumes the following are installed on your system:
 ```
 export AWS_PROFILE=AdministratorAccess-123456789012
 export AWS_ACCOUNT=123456789012
-export ROOT_HOSTED_ZONE_ID=ABCDEFGHIJKLIMOP
-export ROOT_HOSTED_ZONE_NAME=example.com
+export ROOT_HOSTED_ZONE_ID_GO=ABCDEFGHIJKLIMOP
+export ROOT_HOSTED_ZONE_NAME_GO=example.com
 ```
 3. Build the project (from root): `./gradle build` 
 4. Login to AWS: `aws sso login` 
