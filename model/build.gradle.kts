@@ -1,5 +1,7 @@
+extra["smithyTypeScriptVersion"] = "0.19.0"
+extra["smithyVersion"] = "1.42.0"
 plugins {
-    kotlin("jvm")
+    application
     id("software.amazon.smithy.gradle.smithy-jar").version("0.9.0")
 }
 
