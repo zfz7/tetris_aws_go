@@ -5,12 +5,13 @@
     "cdk": "bin/app.ts"
   },
   "scripts": {
-    "build": "yarn format && tsc",
+    "clean": "rm -rf dist",
+    "build": "yarn clean && yarn format && tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
     "deploy": "cdk bootstrap && cdk deploy --all --require-approval never",
-    "format": "prettier --write 'stacks/**/*.ts|bin/**/*.ts'"
+    "format": "prettier --write 'bin/**/*.ts'"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",

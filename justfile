@@ -93,4 +93,4 @@ build-cdk:
 # Cleans cdk, removes build folder
 clean-cdk:
     @echo "Cleaning CDK..."
-    @cd cdk && rm -rf build
+    @cd cdk && yarn clean && rm -rf dist

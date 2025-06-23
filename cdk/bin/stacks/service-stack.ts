@@ -8,8 +8,8 @@ import * as fs from 'fs';
 import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
 import { ARecord, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 import { ApiGatewayDomain } from 'aws-cdk-lib/aws-route53-targets';
-import { PROJECT } from '../bin/config';
-import { CognitoEnvironmentVariables } from '../bin/types';
+import { PROJECT } from '../config';
+import { CognitoEnvironmentVariables } from '../types';
 
 export interface ServiceStackProps extends StackProps {
   stageName: string;

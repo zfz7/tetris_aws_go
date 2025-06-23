@@ -8,7 +8,7 @@ import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins';
 import { ARecord, IPublicHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53';
 import { DnsValidatedCertificate } from 'aws-cdk-lib/aws-certificatemanager';
 import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets';
-import { PROJECT } from '../bin/config';
+import { PROJECT } from '../config';
 
 export interface WebsiteStackProps extends StackProps {
   hostedZone: IPublicHostedZone;

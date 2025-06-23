@@ -1,6 +1,6 @@
 import { Construct } from 'constructs';
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { PROJECT } from '../bin/config';
+import { PROJECT } from '../config';
 import {
   AccountRecovery,
   Mfa,
@@ -10,7 +10,7 @@ import {
   UserPoolEmail,
 } from 'aws-cdk-lib/aws-cognito';
 import { StandardAttribute } from 'aws-cdk-lib/aws-cognito/lib/user-pool-attr';
-import { CognitoEnvironmentVariables } from '../bin/types';
+import { CognitoEnvironmentVariables } from '../types';
 
 export interface CognitoStackProps extends StackProps {
   callbackURL: string;
