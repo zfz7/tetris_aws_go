@@ -15,14 +15,14 @@ types in sync between the frontend and backend using code generation. Here is th
 * Infrastructure:
     * Build Tool: [Gradle](https://gradle.org/) and [Yarn](https://classic.yarnpkg.com/lang/en/)
     * Deployments: [CDK](https://aws.amazon.com/cdk/)
-    * Authentication: [Cognito](https://aws.amazon.com/cognito/)  
+    * Authentication: [Cognito](https://aws.amazon.com/cognito/)
     * Api Definition: [Smithy](https://smithy.io/2.0/index.html)
     * Go Type Generation: [smithy-go](https://github.com/aws/smithy-go)
     * Typescript Type Generation: [smithy-typescript](https://github.com/awslabs/smithy-typescript)
 
 ## Warnings
 
-[smithy-go](https://github.com/awslabs/smithy-go) Does not yet work. Track this [issue](https://github.com/aws/smithy-go/issues/458) to see updated status 
+[smithy-go](https://github.com/awslabs/smithy-go) Does not yet work. Track this [issue](https://github.com/aws/smithy-go/issues/458) to see updated status
 
 The go and typescript type generation rely on [smithy-go](https://github.com/awslabs/smithy-go)
 and [smithy-typescript](https://github.com/awslabs/smithy-typescript), both products are not yet GA. As such they still
@@ -58,23 +58,28 @@ export AWS_ACCOUNT=123456789012
 export ROOT_HOSTED_ZONE_ID_GO=ABCDEFGHIJKLIMOP
 export ROOT_HOSTED_ZONE_NAME_GO=example.com
 ```
-3. Build the project (from root): `./gradle build` 
-4. Login to AWS: `aws sso login` 
-5. Deploy the project (from root): `./gradle deploy` 
+3. Build the project (from root): `.just build`
+4. Login to AWS: `aws sso login`
+5. Deploy the project (from root): `just deploy`
 
 ### Other Commands
 
 ```
-###Clean 
-./gradlew clean #clean all projects
-./gradlew <project>:clean 
-./gradlew backend:clean 
-###Build 
-./gradlew build #build all projects
-./gradlew <project>:clean 
-./gradlew model:build
-###Deploy 
-./gradlew deploy
+just --list
+Available recipes:
+    build          # Builds all packages
+    build-backend  # Builds backend
+    build-cdk      # Builds cdk
+    build-frontend # Builds frontend, requires TS Client to be built
+    build-model    # Build Smithy Models
+    build-tsclient # Build Ts client from model
+    clean          # Cleans all packages
+    clean-backend  # Cleans backend, removes bootstrap and lambdaFunction.zip
+    clean-cdk      # Cleans cdk, removes build folder
+    clean-frontend # Cleans frontend, removes build folder
+    clean-model    # Cleans model packages (removes ./build folder)
+    clean-tsclient # Cleans TS Client, removes all files expect yarn.lock and .gitignore
+    deploy         # Deploys all packages (assumes packages are built)
 
 ###Testing the endpoint with Cognito
 export C_TOKEN="$(aws cognito-idp initiate-auth --region us-west-2 --auth-flow USER_PASSWORD_AUTH --client-id <YOUR_CLIENT_ID> --auth-parameters USERNAME=<USERNAME>,PASSWORD=<PASSWORD> | jq -r .AuthenticationResult.IdToken)"'
