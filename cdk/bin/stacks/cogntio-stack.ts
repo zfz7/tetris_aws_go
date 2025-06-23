@@ -26,6 +26,7 @@ export class CognitoStack extends Stack {
       required: true,
     };
     this.userPool = new UserPool(this, `${PROJECT}-UserPool`, {
+      signInCaseSensitive: true, // Treat MyUsername or myusername as the same
       selfSignUpEnabled: true,
       userPoolName: `${PROJECT}-UserPool`,
       userVerification: {
