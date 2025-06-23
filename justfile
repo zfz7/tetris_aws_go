@@ -11,10 +11,12 @@ clean-model:
     @echo "Cleaning Model..."
     @cd model && rm -rf build
 
-
 build-tsclient:
+  just clean-tsclient
   @echo "Building TS Client..."
+  @cd tsclient && cp -r ../model/build/smithyprojections/model/source/typescript-codegen/* .
+  @cd tsclient && yarn install && yarn build
 
 clean-tsclient:
     @echo "Cleaning TS Client..."
-    @cd tsclient && find . -mindepth 1 ! -name 'yarn.lock' -exec rm -rf {} + > /dev/null
+    bash -O extglob -c 'cd tsclient && rm -rf -- !("yarn.lock"|".gitignore")'
