@@ -34,7 +34,7 @@ export class CognitoStack extends Stack {
         emailBody: `Thank you for signing up for ${PROJECT}. Your verification code is {####}.`,
       },
       enableSmsRole: false,
-      signInAliases: { email: true },
+      signInAliases: { username: true, email: true },
       autoVerify: { email: true },
       standardAttributes: {
         email: required,
