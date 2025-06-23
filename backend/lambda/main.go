@@ -1,13 +1,14 @@
 package main
 
 import (
-	"backend/pkg/model"
+	"backend/api"
 	"context"
 	"encoding/json"
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
 	"net/http"
 	"os"
+
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
@@ -20,7 +21,7 @@ var corsHeaders = map[string]string{
 	"Access-Control-Allow-Methods":     "OPTIONS, POST, GET",
 	"Access-Control-Allow-Credentials": "true",
 }
-var apiError, _ = json.Marshal(model.ApiError{
+var apiError, _ = json.Marshal(api.ApiErrorResponseContent{
 	ErrorMessage: "Not Found",
 })
 var errorEvent = events.APIGatewayProxyResponse{
@@ -36,7 +37,7 @@ func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIG
 	case "SayHello":
 		body, err = json.Marshal(sayHello(req.QueryStringParameters["name"]))
 	case "Info":
-		body, err = json.Marshal(handelInfo())
+		body, err = json.Marshal(handleInfo())
 	default:
 		return errorEvent, nil
 	}
@@ -49,15 +50,20 @@ func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIG
 		Body:       string(body),
 	}, nil
 }
-func sayHello(input string) model.SayHelloResponse {
-	return model.SayHelloResponse{Message: input}
+
+func sayHello(input string) api.SayHelloResponseContent {
+	return api.SayHelloResponseContent{Message: input}
 }
 
-func handelInfo() model.InfoResponse {
-	return model.InfoResponse{
-		Region:                 os.Getenv("REGION"),
-		UserPoolId:             os.Getenv("USER_POOL_ID"),
-		UserPoolWebClientId:    os.Getenv("USER_POOL_WEB_CLIENT_ID"),
-		AuthenticationFlowType: "USER_PASSWORD_AUTH",
+func handleInfo() api.InfoResponseContent {
+	return api.InfoResponseContent{
+		Region:                 Ptr(os.Getenv("REGION")),
+		UserPoolId:             Ptr(os.Getenv("USER_POOL_ID")),
+		UserPoolWebClientId:    Ptr(os.Getenv("USER_POOL_WEB_CLIENT_ID")),
+		AuthenticationFlowType: Ptr("USER_PASSWORD_AUTH"),
 	}
+}
+
+func Ptr[T any](v T) *T {
+	return &v
 }

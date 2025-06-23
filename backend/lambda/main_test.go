@@ -1,35 +1,36 @@
 package main
 
 import (
-	"backend/pkg/model"
+	"backend/api"
 	"encoding/json"
-	"github.com/aws/aws-lambda-go/events"
 	"net/http"
 	"reflect"
 	"testing"
+
+	"github.com/aws/aws-lambda-go/events"
 )
 
 func Test_sayHello(t *testing.T) {
 	got := sayHello("hi")
-	want := model.SayHelloResponse{Message: "hi"}
+	want := api.SayHelloResponseContent{Message: "hi"}
 	if got != want {
 		t.Errorf("sayHello(hi) = %v; want %v", got, want)
 	}
 }
 
-func Test_handelInfo(t *testing.T) {
+func Test_handleInfo(t *testing.T) {
 	t.Setenv("REGION", "1")
 	t.Setenv("USER_POOL_ID", "2")
 	t.Setenv("USER_POOL_WEB_CLIENT_ID", "3")
-	got := handelInfo()
-	want := model.InfoResponse{
-		Region:                 "1",
-		UserPoolId:             "2",
-		UserPoolWebClientId:    "3",
-		AuthenticationFlowType: "USER_PASSWORD_AUTH",
+	got := handleInfo()
+	want := api.InfoResponseContent{
+		Region:                 Ptr("1"),
+		UserPoolId:             Ptr("2"),
+		UserPoolWebClientId:    Ptr("3"),
+		AuthenticationFlowType: Ptr("USER_PASSWORD_AUTH"),
 	}
-	if got != want {
-		t.Errorf("handelInfo() = %v; want %v", got, want)
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("handleInfo() = %#v; want %#v", got, want)
 	}
 }
 func Test_routerForSayHello(t *testing.T) {
@@ -39,7 +40,7 @@ func Test_routerForSayHello(t *testing.T) {
 			OperationName: "SayHello",
 		},
 	}
-	responseBody, _ := json.Marshal(model.SayHelloResponse{
+	responseBody, _ := json.Marshal(api.SayHelloResponseContent{
 		Message: "hi",
 	})
 	want := events.APIGatewayProxyResponse{
@@ -72,11 +73,11 @@ func Test_routerForInfo(t *testing.T) {
 			OperationName: "Info",
 		},
 	}
-	responseBody, _ := json.Marshal(model.InfoResponse{
-		Region:                 "1",
-		UserPoolId:             "2",
-		UserPoolWebClientId:    "3",
-		AuthenticationFlowType: "USER_PASSWORD_AUTH",
+	responseBody, _ := json.Marshal(api.InfoResponseContent{
+		Region:                 Ptr("1"),
+		UserPoolId:             Ptr("2"),
+		UserPoolWebClientId:    Ptr("3"),
+		AuthenticationFlowType: Ptr("USER_PASSWORD_AUTH"),
 	})
 	want := events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
@@ -106,7 +107,7 @@ func Test_routerForError(t *testing.T) {
 			OperationName: "NotFound",
 		},
 	}
-	responseBody, _ := json.Marshal(model.ApiError{
+	responseBody, _ := json.Marshal(api.ApiErrorResponseContent{
 		ErrorMessage: "Not Found",
 	})
 	want := events.APIGatewayProxyResponse{

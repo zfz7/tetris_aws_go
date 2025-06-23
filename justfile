@@ -34,6 +34,7 @@ clean:
     @just clean-tsclient
     @just clean-frontend
     @just clean-cdk
+
 # Deploys all packages (assumes packages are built)
 deploy:
     @echo "Deploying..."
@@ -74,7 +75,10 @@ clean-frontend:
 # Builds backend
 build-backend:
     @echo "Building Backend..."
-    @cd backend && GOOS=linux GOARCH=arm64 go build -o bootstrap ./pkg/main.go  && zip lambdaFunction.zip bootstrap
+    @cd backend/api && go generate
+    @cd backend && go fmt ./...
+    @cd backend && go test ./...
+    @cd backend && GOOS=linux GOARCH=arm64 go build -o bootstrap ./lambda/main.go && zip lambdaFunction.zip bootstrap
 
 # Cleans backend, removes bootstrap and lambdaFunction.zip
 clean-backend:
