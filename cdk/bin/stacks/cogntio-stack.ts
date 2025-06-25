@@ -34,12 +34,18 @@ export class CognitoStack extends Stack {
         emailBody: `Thank you for signing up for ${PROJECT}. Your verification code is {####}.`,
       },
       enableSmsRole: false,
-      signInAliases: { username: true, email: true },
+      signInAliases: { email: true },
       autoVerify: { email: true },
       standardAttributes: {
         email: required,
         givenName: required,
         familyName: required,
+      },
+      signInPolicy: {
+        allowedFirstAuthFactors: {
+          password: true,
+          emailOtp: true,
+        },
       },
       mfa: Mfa.OFF,
       accountRecovery: AccountRecovery.EMAIL_ONLY,
@@ -52,6 +58,8 @@ export class CognitoStack extends Stack {
       supportedIdentityProviders: [UserPoolClientIdentityProvider.COGNITO],
       authFlows: {
         userPassword: true,
+        userSrp: true,
+        user: true,
       },
       oAuth: {
         callbackUrls: [props.callbackURL],

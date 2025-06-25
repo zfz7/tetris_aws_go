@@ -1,40 +1,53 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import { Amplify } from "aws-amplify";
-import { Authenticator } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-import { getHello, getInfo } from "./utils/client";
-import { AmplifyUser, AuthEventData } from "@aws-amplify/ui";
+import {
+  fetchUserAttributes,
+  FetchUserAttributesOutput,
+  signOut,
+} from "aws-amplify/auth";
+import { useEffect, useState } from "react";
+import "./App.css";
+import { LoginWindow } from "./components/Login";
+import { getHello } from "./utils/client";
+
 function App() {
   const [showLoginScreen, setShowLoginScreen] = useState(false);
+  const [attributes, setAttributes] = useState<FetchUserAttributesOutput>({});
+  const { authStatus, user } = useAuthenticator();
 
   useEffect(() => {
-    getInfo().then((config) => {
-      Amplify.configure({
-        Auth: {
-          ...config,
-        },
-      });
-    });
-  }, []);
+    const loadAttributes = async () => {
+      try {
+        const result: FetchUserAttributesOutput = await fetchUserAttributes();
+        setAttributes(result);
+      } catch (e) {
+        // Unauthenticated
+        setAttributes({});
+      }
+    };
+    loadAttributes();
+    if (authStatus === "authenticated") {
+      setShowLoginScreen(false);
+    }
+  }, [authStatus, user]);
 
-  interface HomeScreenProps {
-    user: AmplifyUser | undefined;
-    signOut: ((data?: AuthEventData | undefined) => void) | undefined;
-  }
-
-  const HomeScreen = ({ user, signOut }: HomeScreenProps) => {
+  const HomeScreen = () => {
     const [input, setInput] = useState("");
     const [output, setOutput] = useState("");
     return (
       <div className="App-header">
         <h1>Tetris template</h1>
         <h4>
-          Hello {user?.attributes!["given_name"]}{" "}
-          {user?.attributes!["family_name"]}
+          Hello {attributes.given_name} {attributes.family_name}
         </h4>
-        {signOut ? (
-          <button onClick={signOut}>Sign out</button>
+        {authStatus === "authenticated" ? (
+          <button
+            onClick={async () => {
+              await signOut();
+            }}
+          >
+            Sign out
+          </button>
         ) : (
           <button onClick={() => setShowLoginScreen(true)}>Sign in</button>
         )}
@@ -43,10 +56,7 @@ function App() {
         <br />
         <button
           onClick={() =>
-            getHello(
-              { name: input },
-              user?.getSignInUserSession()?.getIdToken()?.getJwtToken()!,
-            ).then(
+            getHello({ name: input }).then(
               (res) => setOutput(res.message!),
               (err) => console.log(err),
             )
@@ -60,17 +70,7 @@ function App() {
     );
   };
 
-  return showLoginScreen ? (
-    <Authenticator
-      variation="modal"
-      loginMechanisms={["username"]}
-      signUpAttributes={["email", "family_name", "given_name"]}
-    >
-      {({ signOut, user }) => <HomeScreen user={user} signOut={signOut} />}
-    </Authenticator>
-  ) : (
-    <HomeScreen user={undefined} signOut={undefined} />
-  );
+  return showLoginScreen ? <LoginWindow /> : <HomeScreen />;
 }
 
 export default App;
