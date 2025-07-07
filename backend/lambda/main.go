@@ -7,6 +7,7 @@ import (
 	"backend/server/services"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -35,49 +36,50 @@ var corsHeaders = map[string]string{
 	"Access-Control-Allow-Credentials": "true",
 }
 
-var apiError, _ = json.Marshal(api.InvalidInputErrorResponseContent{
-	ErrorMessage: "Not Found",
-})
-
-var unknownMethod = events.APIGatewayProxyResponse{
-	Headers:    corsHeaders,
-	StatusCode: http.StatusMethodNotAllowed,
-	Body:       string(apiError),
-}
-
 func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var body []byte
 	switch req.RequestContext.OperationName {
 	case "SayHello":
 		input := req.QueryStringParameters["name"]
 		res, err := ctrl.HelloController.SayHello(input)
-		if err != nil {
-			return errorHandler(err), nil
-		}
-		body, err = json.Marshal(res)
+		return parseRes(res, err), nil
 	case "Info":
 		res, err := ctrl.InfoController.Info()
-		if err != nil {
-			return errorHandler(err), nil
-		}
-		body, err = json.Marshal(res)
+		return parseRes(res, err), nil
 	default:
-		return unknownMethod, nil
+		return events.APIGatewayProxyResponse{
+			Headers:    corsHeaders,
+			StatusCode: http.StatusMethodNotAllowed,
+			Body:       "{\"errorMessage\":\"Method not found.\"}",
+		}, nil
 	}
+}
+
+func parseRes[T any](res T, err error) events.APIGatewayProxyResponse {
+	if err != nil {
+		return errorHandler(err)
+	}
+	body, e := json.Marshal(res)
+
+	if e != nil {
+		return errorHandler(err) // Will return 500 on unknown errors
+	}
+
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Headers:    corsHeaders,
 		Body:       string(body),
-	}, nil
+	}
 }
 
 func errorHandler(err error) events.APIGatewayProxyResponse {
 	var statusCode int
 	var body []byte
 
-	if _, ok := err.(api.InvalidInputErrorResponseContent); ok {
+	var invalidInputError api.InvalidInputErrorResponseContent
+	var internalServerError api.InternalServerErrorResponseContent
+	if errors.As(err, &invalidInputError) {
 		statusCode = http.StatusBadRequest
-	} else if _, ok := err.(api.InternalServerErrorResponseContent); ok {
+	} else if errors.As(err, &internalServerError) {
 		statusCode = http.StatusInternalServerError
 	} else {
 		statusCode = http.StatusInternalServerError

@@ -12,6 +12,8 @@ alias bc := build-cdk
 alias b := build
 [private]
 alias d := deploy
+[private]
+alias dq := deploy-dev-quick
 
 
 _default:
@@ -40,6 +42,22 @@ deploy:
     @echo "Deploying..."
     @cd cdk && yarn deploy
 
+# Builds the backend go service binary and deploys it without using CDK
+[confirm("Are you sure no changes have been made to the CDK / Smithy / APIGateway?")]
+deploy-dev-quick:
+    @cd backend && GOOS=linux GOARCH=arm64 go build -o bootstrap ./lambda/main.go && zip lambdaFunction.zip bootstrap
+    @bash -c ' \
+    FUNCTION_NAME=$(aws lambda list-functions \
+    --region "us-west-2" \
+    --query "Functions[?starts_with(FunctionName, \`Tetris-Go-Service\`)].FunctionName" \
+    --output text); \
+    echo "Lambda function: $FUNCTION_NAME"; \
+    if aws lambda update-function-code --region "us-west-2" --function-name "$FUNCTION_NAME" --zip-file fileb://./backend/lambdaFunction.zip > /dev/null; then \
+    echo "✅ Lambda function code updated successfully"; \
+    else \
+    echo "❌ Failed to update Lambda function"; \
+    fi \
+    '
 # Build Smithy Models
 build-model:
   @echo "Building Model..."
