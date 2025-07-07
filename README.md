@@ -17,14 +17,14 @@ types in sync between the frontend and backend using code generation. Here is th
     * Deployments: [CDK](https://aws.amazon.com/cdk/)
     * Authentication: [Cognito](https://aws.amazon.com/cognito/)
     * Api Definition: [Smithy](https://smithy.io/2.0/index.html)
-    * Go Type Generation: [smithy-go](https://github.com/aws/smithy-go)
+    * Go Type Generation: [oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)
     * Typescript Type Generation: [smithy-typescript](https://github.com/awslabs/smithy-typescript)
 
 ## Warnings
 
 [smithy-go](https://github.com/awslabs/smithy-go) Does not yet work. Track this [issue](https://github.com/aws/smithy-go/issues/458) to see updated status
 
-The go and typescript type generation rely on [smithy-go](https://github.com/awslabs/smithy-go)
+The go and typescript type generation rely on [oapi-codegen](https://github.com/oapi-codegen/oapi-codegen)
 and [smithy-typescript](https://github.com/awslabs/smithy-typescript), both products are not yet GA. As such they still
 have some quirks to work through. Overall it seems that the typescript code generation tool is a bit more stable.
 
