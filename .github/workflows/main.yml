@@ -30,5 +30,11 @@ jobs:
           export PATH=$PATH:$(go env GOPATH)/bin
           go install github.com/securego/gosec/v2/cmd/gosec@latest
           gosec ./...
+      - name: Run govulncheck
+        run: |
+          cd backend
+          export PATH=$PATH:$(go env GOPATH)/bin
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
       - name: Run tests
         run: just build
