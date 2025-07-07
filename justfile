@@ -45,7 +45,12 @@ deploy:
 # Builds the backend go service binary and deploys it without using CDK
 [confirm("Are you sure no changes have been made to the CDK / Smithy / APIGateway?")]
 deploy-dev-quick:
-    @cd backend && GOOS=linux GOARCH=arm64 go build -o bootstrap ./lambda/main.go && zip lambdaFunction.zip bootstrap
+    @cd backend && \
+            GOOS=linux \
+            GOARCH=arm64 \
+            CGO_ENABLED=0 \
+            go build -ldflags="-s -w" -o bootstrap ./lambda/main.go
+    @cd backend && zip lambdaFunction.zip bootstrap
     @bash -c ' \
     FUNCTION_NAME=$(aws lambda list-functions \
     --region "us-west-2" \
@@ -90,15 +95,20 @@ clean-frontend:
     @echo "Cleaning Frontend..."
     @cd frontend && rm -rf build
 
-# Builds backend
 build-backend:
-    @echo "Building Backend..."
-    @cd backend/api && go generate
+    @cd backend/api && go generate ./...
     @cd backend && go fmt ./...
-    @cd backend && go test ./...
+    @cd backend && goimports -w .
+    @cd backend && golangci-lint run ./...
+    @cd backend && go test -v -race -cover ./...
     @cd backend && gosec ./...
     @cd backend && govulncheck ./...
-    @cd backend && GOOS=linux GOARCH=arm64 go build -o bootstrap ./lambda/main.go && zip lambdaFunction.zip bootstrap
+    @cd backend && \
+        GOOS=linux \
+        GOARCH=arm64 \
+        CGO_ENABLED=0 \
+        go build -ldflags="-s -w" -o bootstrap ./lambda/main.go
+    @cd backend && zip lambdaFunction.zip bootstrap
 
 # Cleans backend, removes bootstrap and lambdaFunction.zip
 clean-backend:

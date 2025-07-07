@@ -15,7 +15,6 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-var cfg *config.Config
 var svc *services.Services
 var ctrl *controllers.Controllers
 
