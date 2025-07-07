@@ -24,6 +24,8 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: "1.24.x"
+          cache-dependency-path: |
+            backend/go.sum
       - name: Run Gosec Security Scanner
         run: | # https://github.com/securego/gosec/issues/469
           cd backend
