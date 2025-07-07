@@ -50,7 +50,8 @@ operation SayHello {
     }
 
     errors: [
-        ApiError
+        InvalidInputError
+        InternalServerError
     ]
 }
 
@@ -65,13 +66,21 @@ operation Info {
         authenticationFlowType: String
     }
     errors: [
-        ApiError
+        InvalidInputError
+        InternalServerError
     ]
 }
 
 @error("client")
 @httpError(400)
-structure ApiError {
+structure InvalidInputError {
+    @required
+    errorMessage: String
+}
+
+@error("server")
+@httpError(500)
+structure InternalServerError {
     @required
     errorMessage: String
 }

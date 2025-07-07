@@ -2,16 +2,29 @@ package main
 
 import (
 	"backend/api"
+	"backend/config"
+	"backend/server/controllers"
+	"backend/server/services"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
+var cfg *config.Config
+var svc *services.Services
+var ctrl *controllers.Controllers
+
 func main() {
+	cfg, err := config.NewConfig()
+	if err != nil {
+		fmt.Printf("Failed to load config: %s", err)
+	}
+	svc = services.InitServices(cfg)
+	ctrl = controllers.InitControllers(svc, cfg)
 	lambda.Start(router)
 }
 
@@ -21,28 +34,35 @@ var corsHeaders = map[string]string{
 	"Access-Control-Allow-Methods":     "OPTIONS, POST, GET",
 	"Access-Control-Allow-Credentials": "true",
 }
-var apiError, _ = json.Marshal(api.ApiErrorResponseContent{
+
+var apiError, _ = json.Marshal(api.InvalidInputErrorResponseContent{
 	ErrorMessage: "Not Found",
 })
-var errorEvent = events.APIGatewayProxyResponse{
+
+var unknownMethod = events.APIGatewayProxyResponse{
 	Headers:    corsHeaders,
-	StatusCode: http.StatusNotFound,
+	StatusCode: http.StatusMethodNotAllowed,
 	Body:       string(apiError),
 }
 
 func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var body []byte
-	var err error
 	switch req.RequestContext.OperationName {
 	case "SayHello":
-		body, err = json.Marshal(sayHello(req.QueryStringParameters["name"]))
+		input := req.QueryStringParameters["name"]
+		res, err := ctrl.HelloController.SayHello(input)
+		if err != nil {
+			return errorHandler(err), nil
+		}
+		body, err = json.Marshal(res)
 	case "Info":
-		body, err = json.Marshal(handleInfo())
+		res, err := ctrl.InfoController.Info()
+		if err != nil {
+			return errorHandler(err), nil
+		}
+		body, err = json.Marshal(res)
 	default:
-		return errorEvent, nil
-	}
-	if err != nil {
-		return errorEvent, nil
+		return unknownMethod, nil
 	}
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
@@ -51,19 +71,27 @@ func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIG
 	}, nil
 }
 
-func sayHello(input string) api.SayHelloResponseContent {
-	return api.SayHelloResponseContent{Message: input}
-}
+func errorHandler(err error) events.APIGatewayProxyResponse {
+	var statusCode int
+	var body []byte
 
-func handleInfo() api.InfoResponseContent {
-	return api.InfoResponseContent{
-		Region:                 Ptr(os.Getenv("REGION")),
-		UserPoolId:             Ptr(os.Getenv("USER_POOL_ID")),
-		UserPoolWebClientId:    Ptr(os.Getenv("USER_POOL_WEB_CLIENT_ID")),
-		AuthenticationFlowType: Ptr("USER_PASSWORD_AUTH"),
+	if _, ok := err.(api.InvalidInputErrorResponseContent); ok {
+		statusCode = http.StatusBadRequest
+	} else if _, ok := err.(api.InternalServerErrorResponseContent); ok {
+		statusCode = http.StatusInternalServerError
+	} else {
+		statusCode = http.StatusInternalServerError
 	}
-}
 
-func Ptr[T any](v T) *T {
-	return &v
+	body, marshalErr := json.Marshal(err)
+	if marshalErr != nil {
+		body = []byte(`{"errorMessage":"Internal Server Error"}`)
+		statusCode = http.StatusInternalServerError
+	}
+
+	return events.APIGatewayProxyResponse{
+		StatusCode: statusCode,
+		Headers:    corsHeaders,
+		Body:       string(body),
+	}
 }

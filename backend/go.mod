@@ -5,6 +5,7 @@ go 1.24
 require github.com/aws/aws-lambda-go v1.41.0
 
 require (
+	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/dprotaso/go-yit v0.0.0-20220510233725-9ba8df137936 // indirect
 	github.com/getkin/kin-openapi v0.127.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect

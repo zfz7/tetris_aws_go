@@ -7,17 +7,22 @@ const (
 	CognitoScopes = "cognito.Scopes"
 )
 
-// ApiErrorResponseContent defines model for ApiErrorResponseContent.
-type ApiErrorResponseContent struct {
-	ErrorMessage string `json:"errorMessage"`
-}
-
 // InfoResponseContent defines model for InfoResponseContent.
 type InfoResponseContent struct {
 	AuthenticationFlowType *string `json:"authenticationFlowType,omitempty"`
 	Region                 *string `json:"region,omitempty"`
 	UserPoolId             *string `json:"userPoolId,omitempty"`
 	UserPoolWebClientId    *string `json:"userPoolWebClientId,omitempty"`
+}
+
+// InternalServerErrorResponseContent defines model for InternalServerErrorResponseContent.
+type InternalServerErrorResponseContent struct {
+	ErrorMessage string `json:"errorMessage"`
+}
+
+// InvalidInputErrorResponseContent defines model for InvalidInputErrorResponseContent.
+type InvalidInputErrorResponseContent struct {
+	ErrorMessage string `json:"errorMessage"`
 }
 
 // SayHelloResponseContent defines model for SayHelloResponseContent.
