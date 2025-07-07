@@ -4,10 +4,11 @@ import (
 	"backend/api"
 	"backend/config"
 	"backend/utils"
+	"context"
 )
 
 type InfoService interface {
-	Info() (*api.InfoResponseContent, error)
+	Info(ctx context.Context) (*api.InfoResponseContent, error)
 }
 
 type infoService struct {
@@ -20,7 +21,7 @@ func NewInfoService(cfg *config.Config) *infoService {
 	}
 }
 
-func (s *infoService) Info() (*api.InfoResponseContent, error) {
+func (s *infoService) Info(ctx context.Context) (*api.InfoResponseContent, error) {
 	if s.cfg == nil {
 		return &api.InfoResponseContent{
 			AuthenticationFlowType: utils.Ptr(""),

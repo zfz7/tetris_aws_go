@@ -4,6 +4,7 @@ import (
 	"backend/api"
 	"backend/config"
 	"backend/utils"
+	"context"
 	"testing"
 )
 
@@ -48,7 +49,7 @@ func TestInfoService_Info(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewInfoService(tt.config)
-			got, err := s.Info()
+			got, err := s.Info(context.Background())
 
 			if err != nil {
 				t.Errorf("InfoService.Info() error = %v, expected no error", err)

@@ -3,10 +3,11 @@ package controllers
 import (
 	"backend/api"
 	"backend/server/services"
+	"context"
 )
 
 type HelloController interface {
-	SayHello(input string) (*api.SayHelloResponseContent, error)
+	SayHello(ctx context.Context, input string) (*api.SayHelloResponseContent, error)
 }
 
 type helloController struct {
@@ -19,6 +20,6 @@ func NewHelloController(helloService services.HelloService) *helloController {
 	}
 }
 
-func (c *helloController) SayHello(input string) (*api.SayHelloResponseContent, error) {
-	return c.helloService.SayHello(input)
+func (c *helloController) SayHello(ctx context.Context, input string) (*api.SayHelloResponseContent, error) {
+	return c.helloService.SayHello(ctx, input)
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"backend/api"
+	"context"
 	"errors"
 	"testing"
 )
@@ -51,7 +52,7 @@ func TestHelloService_SayHello(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewHelloService()
-			got, err := s.SayHello(tt.input)
+			got, err := s.SayHello(context.Background(), tt.input)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("HelloService.SayHello() error = %v, wantErr %v", err, tt.wantErr)

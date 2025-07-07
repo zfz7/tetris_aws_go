@@ -39,10 +39,10 @@ func router(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIG
 	switch req.RequestContext.OperationName {
 	case "SayHello":
 		input := req.QueryStringParameters["name"]
-		res, err := ctrl.HelloController.SayHello(input)
+		res, err := ctrl.HelloController.SayHello(ctx, input)
 		return parseRes(res, err), nil
 	case "Info":
-		res, err := ctrl.InfoController.Info()
+		res, err := ctrl.InfoController.Info(ctx)
 		return parseRes(res, err), nil
 	default:
 		return events.APIGatewayProxyResponse{

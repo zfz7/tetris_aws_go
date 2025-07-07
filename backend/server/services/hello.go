@@ -2,10 +2,11 @@ package services
 
 import (
 	"backend/api"
+	"context"
 )
 
 type HelloService interface {
-	SayHello(input string) (*api.SayHelloResponseContent, error)
+	SayHello(ctx context.Context, input string) (*api.SayHelloResponseContent, error)
 }
 
 type helloService struct {
@@ -15,7 +16,7 @@ func NewHelloService() *helloService {
 	return &helloService{}
 }
 
-func (s *helloService) SayHello(input string) (*api.SayHelloResponseContent, error) {
+func (s *helloService) SayHello(ctx context.Context, input string) (*api.SayHelloResponseContent, error) {
 	if input == "400" {
 		return nil, api.InvalidInputErrorResponseContent{ErrorMessage: "Invalid Input."}
 	}

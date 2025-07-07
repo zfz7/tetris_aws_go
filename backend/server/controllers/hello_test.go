@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"backend/api"
+	"context"
 	"errors"
 	"testing"
 )
@@ -11,7 +12,7 @@ type mockHelloService struct {
 	sayHelloFunc func(input string) (*api.SayHelloResponseContent, error)
 }
 
-func (m *mockHelloService) SayHello(input string) (*api.SayHelloResponseContent, error) {
+func (m *mockHelloService) SayHello(ctx context.Context, input string) (*api.SayHelloResponseContent, error) {
 	if m.sayHelloFunc != nil {
 		return m.sayHelloFunc(input)
 	}
@@ -74,7 +75,7 @@ func TestHelloController_SayHello(t *testing.T) {
 			}
 
 			controller := NewHelloController(mockService)
-			got, err := controller.SayHello(tt.input)
+			got, err := controller.SayHello(context.Background(), tt.input)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("HelloController.SayHello() error = %v, wantErr %v", err, tt.wantErr)
@@ -157,7 +158,7 @@ func TestHelloController_ServiceIntegration(t *testing.T) {
 	controller := NewHelloController(mockService)
 	expectedInput := "test-input"
 
-	_, err := controller.SayHello(expectedInput)
+	_, err := controller.SayHello(context.Background(), expectedInput)
 	if err != nil {
 		t.Errorf("HelloController.SayHello() unexpected error = %v", err)
 	}
@@ -177,5 +178,5 @@ func TestHelloController_NilService(t *testing.T) {
 	}()
 
 	controller := NewHelloController(nil)
-	_, _ = controller.SayHello("test")
+	_, _ = controller.SayHello(context.Background(), "test")
 }

@@ -3,6 +3,7 @@ package controllers
 import (
 	"backend/api"
 	"backend/utils"
+	"context"
 	"testing"
 )
 
@@ -11,7 +12,7 @@ type mockInfoService struct {
 	infoFunc func() (*api.InfoResponseContent, error)
 }
 
-func (m *mockInfoService) Info() (*api.InfoResponseContent, error) {
+func (m *mockInfoService) Info(ctx context.Context) (*api.InfoResponseContent, error) {
 	if m.infoFunc != nil {
 		return m.infoFunc()
 	}
@@ -76,7 +77,7 @@ func TestInfoController_Info(t *testing.T) {
 			}
 
 			controller := NewInfoController(mockService)
-			got, err := controller.Info()
+			got, err := controller.Info(context.Background())
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("InfoController.Info() error = %v, wantErr %v", err, tt.wantErr)
