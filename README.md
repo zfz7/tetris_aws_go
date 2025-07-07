@@ -80,6 +80,7 @@ Available recipes:
     clean-model    # Cleans model packages (removes ./build folder)
     clean-tsclient # Cleans TS Client, removes all files expect yarn.lock and .gitignore
     deploy         # Deploys all packages (assumes packages are built)
+    deploy-quick   # Builds the backend go service binary and deploys it without using CDK
 
 ###Testing the endpoint with Cognito
 export C_TOKEN="$(aws cognito-idp initiate-auth --region us-west-2 --auth-flow USER_PASSWORD_AUTH --client-id <YOUR_CLIENT_ID> --auth-parameters USERNAME=<USERNAME>,PASSWORD=<PASSWORD> | jq -r .AuthenticationResult.IdToken)"'

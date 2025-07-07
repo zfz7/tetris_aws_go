@@ -13,7 +13,7 @@ alias b := build
 [private]
 alias d := deploy
 [private]
-alias dq := deploy-dev-quick
+alias dq := deploy-quick
 
 
 _default:
@@ -44,7 +44,7 @@ deploy:
 
 # Builds the backend go service binary and deploys it without using CDK
 [confirm("Are you sure no changes have been made to the CDK / Smithy / APIGateway?")]
-deploy-dev-quick:
+deploy-quick:
     @cd backend && \
             GOOS=linux \
             GOARCH=arm64 \
