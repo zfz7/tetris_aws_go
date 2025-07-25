@@ -3,7 +3,7 @@ import { IdentityProvider } from "@smithy/types/dist-types/identity/identity";
 import { TokenIdentity } from "@smithy/types/dist-types/identity/tokenIdentity";
 import { fetchAuthSession, signOut } from "aws-amplify/auth";
 
-const baseUrl = `https://api.${window.location.hostname}`;
+const baseUrl = `https://api.go.daniel-eichman.com`;
 
 const tokenProvider: IdentityProvider<TokenIdentity> = async () => {
   try {
