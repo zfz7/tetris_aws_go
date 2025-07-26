@@ -1,13 +1,13 @@
-import { Authenticator, Button, useAuthenticator } from "@aws-amplify/ui-react";
+import { Authenticator, Button } from "@aws-amplify/ui-react";
 import { signIn, SignInInput, signUp, SignUpInput } from "aws-amplify/auth";
 import { useEffect, useState } from "react";
 
 export function LoginWindow() {
-  // const [otp, setOtp] = useState(false);
-  const [otp, setOtp] = useState(() => {
-    const savedOtp = localStorage.getItem("otp");
-    return savedOtp === "true";
-  });
+  const [otp, setOtp] = useState(false);
+  // const [otp, setOtp] = useState(() => {
+  //   const savedOtp = localStorage.getItem("otp");
+  //   return savedOtp === "true";
+  // });
 
   useEffect(() => {
     localStorage.setItem("otp", otp.toString());
@@ -15,12 +15,12 @@ export function LoginWindow() {
 
   return (
     <Authenticator
+      key={otp.toString()}
       variation="modal"
       initialState={"signIn"}
       components={{
         SignIn: {
           Footer() {
-            const { toForgotPassword } = useAuthenticator();
             return (
               <>
                 <Button
@@ -28,7 +28,6 @@ export function LoginWindow() {
                   size="small"
                   onClick={() => {
                     setOtp(!otp);
-                    window.location.reload();
                   }}
                 >
                   {otp ? "Sign with Password" : "Sign without Password"}
@@ -36,7 +35,7 @@ export function LoginWindow() {
                 <Button
                   variation="link"
                   size="small"
-                  onClick={toForgotPassword}
+                  onClick={() => console.log("do nothing")}
                 >
                   Forgot Password
                 </Button>

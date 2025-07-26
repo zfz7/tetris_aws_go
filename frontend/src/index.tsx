@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import { getInfo } from "./utils/client";
 import { Amplify } from "aws-amplify";
-import { Authenticator } from "@aws-amplify/ui-react";
 
 const config = await getInfo();
 
@@ -23,8 +22,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Authenticator.Provider>
-      <App />
-    </Authenticator.Provider>
+    <App />
   </React.StrictMode>,
 );
