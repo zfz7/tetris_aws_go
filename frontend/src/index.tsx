@@ -23,8 +23,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Authenticator.Provider>
       <App />
-    </Authenticator.Provider>
   </React.StrictMode>,
 );

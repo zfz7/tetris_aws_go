@@ -1,20 +1,20 @@
 import { Authenticator, Button, useAuthenticator } from "@aws-amplify/ui-react";
-import { signIn, SignInInput, signUp, SignUpInput } from "aws-amplify/auth";
-import { useEffect, useState } from "react";
+import {
+  confirmSignIn,
+  ConfirmSignInInput,
+  signIn,
+  SignInInput,
+  signUp,
+  SignUpInput,
+} from "aws-amplify/auth";
+import { useState } from "react";
 
-export function LoginWindow() {
-  // const [otp, setOtp] = useState(false);
-  const [otp, setOtp] = useState(() => {
-    const savedOtp = localStorage.getItem("otp");
-    return savedOtp === "true";
-  });
-
-  useEffect(() => {
-    localStorage.setItem("otp", otp.toString());
-  }, [otp]);
+export function LoginWindow(props: { loginComplete: () => void }) {
+  const [otp, setOtp] = useState(false);
 
   return (
     <Authenticator
+      key={otp ? "otp-mode" : "password-mode"} // Force re-mount when mode changes
       variation="modal"
       initialState={"signIn"}
       components={{
@@ -28,7 +28,6 @@ export function LoginWindow() {
                   size="small"
                   onClick={() => {
                     setOtp(!otp);
-                    window.location.reload();
                   }}
                 >
                   {otp ? "Sign with Password" : "Sign without Password"}
@@ -104,6 +103,21 @@ export function LoginWindow() {
               authFlowType: otp ? "USER_AUTH" : "USER_PASSWORD_AUTH",
               preferredChallenge: "EMAIL_OTP",
             },
+          }).then((ret) => {
+            if (!otp && ret.isSignedIn) {
+              // Username password flow just shows this screen
+              props.loginComplete();
+            }
+            return ret;
+          });
+        },
+        async handleConfirmSignIn(input: ConfirmSignInInput) {
+          return confirmSignIn(input).then((ret) => {
+            if (otp && ret.isSignedIn) {
+              // OTP flow shows OTP code screen
+              props.loginComplete();
+            }
+            return ret;
           });
         },
         async handleSignUp(input: SignUpInput) {
