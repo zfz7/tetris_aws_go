@@ -1,8 +1,8 @@
-extra["smithyTypeScriptVersion"] = "0.31.0"
-extra["smithyVersion"] = "1.59.0"
+extra["smithyTypeScriptVersion"] = "0.40.0"
+extra["smithyVersion"] = "1.65.0"
 plugins {
     application
-    id("software.amazon.smithy.gradle.smithy-jar").version("0.9.0")
+    id("software.amazon.smithy.gradle.smithy-jar").version("1.3.0")
 }
 
 repositories {
