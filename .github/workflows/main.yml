@@ -20,7 +20,7 @@ jobs:
           java-version: 17
       - name: Setup Just
         uses: extractions/setup-just@v3
-      - name: Setup Go 1.24.x
+      - name: Setup Go 1.25.x
         uses: actions/setup-go@v4
         with:
           go-version: "1.24.x"
