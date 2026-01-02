@@ -12,7 +12,7 @@ import {
 } from "@aws-amplify/ui-react";
 import {
   fetchUserAttributes,
-  FetchUserAttributesOutput,
+  type FetchUserAttributesOutput,
   signOut,
 } from "aws-amplify/auth";
 import { useEffect, useState } from "react";
@@ -46,6 +46,7 @@ export const Home = (props: { showLoginScreen: () => void } ) => {
         const result: FetchUserAttributesOutput = await fetchUserAttributes();
         setAttributes(result);
       } catch (e) {
+        console.log(e)
         // Unauthenticated
         setAttributes({});
       }

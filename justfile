@@ -1,25 +1,19 @@
-[private]
 alias bm := build-model
-[private]
 alias btsc := build-tsclient
-[private]
 alias bf := build-frontend
-[private]
 alias bb := build-backend
-[private]
 alias bc := build-cdk
-[private]
 alias b := build
-[private]
 alias d := deploy
-[private]
 alias dq := deploy-quick
-
+alias s := serve
+alias l := lint
+alias ut := unit-test
 
 _default:
-  just --list
+    just --list
 
-#Builds all packages
+# Builds all packages
 build:
     @echo "Building..."
     @just build-model
@@ -63,10 +57,11 @@ deploy-quick:
     echo "❌ Failed to update Lambda function"; \
     fi \
     '
+
 # Build Smithy Models
 build-model:
-  @echo "Building Model..."
-  @cd model && ./gradlew build
+    @echo "Building Model..."
+    @cd model && ./gradlew build
 
 # Cleans model packages (removes ./build folder)
 clean-model:
@@ -75,10 +70,10 @@ clean-model:
 
 # Build Ts client from model
 build-tsclient:
-  just clean-tsclient
-  @echo "Building TS Client..."
-  @cd tsclient && cp -r ../model/build/smithyprojections/model/source/typescript-codegen/* .
-  @cd tsclient && yarn install && yarn build
+    just clean-tsclient
+    @echo "Building TS Client..."
+    @cd tsclient && cp -r ../model/build/smithyprojections/model/source/typescript-codegen/* .
+    @cd tsclient && yarn install && yarn build
 
 # Cleans TS Client, removes all files expect yarn.lock and .gitignore
 clean-tsclient:
@@ -89,6 +84,10 @@ clean-tsclient:
 build-frontend:
     @echo "Building Frontend..."
     @cd frontend && yarn install && yarn build
+
+# Runs frontend locally
+serve:
+    @cd frontend && yarn vite serve
 
 # Cleans frontend, removes build folder
 clean-frontend:
@@ -124,3 +123,12 @@ build-cdk:
 clean-cdk:
     @echo "Cleaning CDK..."
     @cd cdk && yarn clean && rm -rf dist
+
+lint:
+    @cd backend && golangci-lint run ./...
+    @cd cdk && yarn format
+    @cd frontend && yarn lint --fix
+
+unit-test:
+    @cd backend && go test ./...
+    @cd frontend && yarn vitest --run

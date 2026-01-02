@@ -58,7 +58,7 @@ export class WebsiteStack extends Stack {
       destinationBucket: websiteBuck,
       distribution: distribution,
       distributionPaths: ['/*'], // Invalidate existing distribution
-      sources: [Source.asset(path.resolve('../frontend/', 'build'))],
+      sources: [Source.asset(path.resolve('../frontend/', 'dist'))],
     });
 
     new ARecord(this, `${PROJECT}-Website-ARecord`, {

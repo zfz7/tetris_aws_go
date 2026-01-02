@@ -8,7 +8,7 @@ import { Home } from "./components/Home";
 function App() {
   const [showLoginScreen, setShowLoginScreen] = useState(false);
   return showLoginScreen ? (
-    // Login window should not be inside <Authenticator.Provider>
+  // Login window should not be inside <Authenticator.Provider>
     <LoginWindow loginComplete={() => setShowLoginScreen(false)} />
   ) : (
     <Authenticator.Provider>

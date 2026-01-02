@@ -1,11 +1,11 @@
 import { Authenticator, Button, useAuthenticator } from "@aws-amplify/ui-react";
 import {
   confirmSignIn,
-  ConfirmSignInInput,
+  type ConfirmSignInInput,
   signIn,
-  SignInInput,
+  type SignInInput,
   signUp,
-  SignUpInput,
+  type SignUpInput,
 } from "aws-amplify/auth";
 import { useState } from "react";
 

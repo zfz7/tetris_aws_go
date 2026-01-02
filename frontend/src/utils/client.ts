@@ -1,6 +1,6 @@
-import { InfoOutput, SayHelloInput, SayHelloOutput, Tetris } from "ts-client";
-import { IdentityProvider } from "@smithy/types/dist-types/identity/identity";
-import { TokenIdentity } from "@smithy/types/dist-types/identity/tokenIdentity";
+import { type InfoOutput, type SayHelloInput, type SayHelloOutput, Tetris } from "ts-client";
+import type { IdentityProvider } from "@smithy/types/dist-types/identity/identity";
+import type { TokenIdentity } from "@smithy/types/dist-types/identity/tokenIdentity";
 import { fetchAuthSession, signOut } from "aws-amplify/auth";
 
 const baseUrl = `https://api.${window.location.hostname}`;
@@ -9,8 +9,8 @@ const tokenProvider: IdentityProvider<TokenIdentity> = async () => {
   try {
     const session = await fetchAuthSession();
     return Promise.resolve({
-      token: session.tokens?.idToken?.toString()!,
-      expiration: new Date(session.tokens!!.idToken!!.payload!!.exp!! * 1000),
+      token: session.tokens?.idToken?.toString() ?? "",
+      expiration: new Date(session.tokens!.idToken!.payload!.exp! * 1000),
     });
   } catch (error) {
     console.error("Error fetching the current session:", error);
