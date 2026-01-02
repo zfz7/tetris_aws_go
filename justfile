@@ -14,6 +14,12 @@ alias b := build
 alias d := deploy
 [private]
 alias dq := deploy-quick
+[private]
+alias s := serve
+[private]
+alias l := lint
+[private]
+alias ut := unit-test
 
 
 _default:
@@ -88,7 +94,11 @@ clean-tsclient:
 # Builds frontend, requires TS Client to be built
 build-frontend:
     @echo "Building Frontend..."
-    @cd frontend && yarn install && yarn build
+    @cd frontend && yarn build
+
+# Runs frontend locally
+serve:
+ @cd frontend && yarn vite serve
 
 # Cleans frontend, removes build folder
 clean-frontend:
@@ -124,3 +134,12 @@ build-cdk:
 clean-cdk:
     @echo "Cleaning CDK..."
     @cd cdk && yarn clean && rm -rf dist
+
+lint:
+    @cd backend && golangci-lint run ./...
+    @cd cdk && yarn format
+    @cd frontend && yarn lint --fix
+
+unit-test:
+    @cd backend && go test ./...
+    @cd frontend && yarn vitest --run
